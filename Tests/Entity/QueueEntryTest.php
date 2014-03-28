@@ -81,17 +81,6 @@ class QueueEntryTest extends WhiteOctoberCoreTestCase
     }
 
     /**
-     * Test that we don't have startedAt or finishedAt setters
-     * This should be handled by start() and finish()
-     */
-    public function testCantSetStartedOrFinishedAt()
-    {
-        $r = new \ReflectionClass(get_class(new QueueEntry()));
-        $this->assertFalse($r->hasMethod("setStartedAt"));
-        $this->assertFalse($r->hasMethod("setFinishedAt"));
-    }
-
-    /**
      * Test entity defaults
      */
     public function testDefaults()
