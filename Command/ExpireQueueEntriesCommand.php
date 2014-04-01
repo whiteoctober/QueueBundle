@@ -60,15 +60,14 @@ class ExpireQueueEntriesCommand extends WhiteOctoberCommandBase
      */
     protected function expireQueueEntriesByWeeks($weeksCount)
     {
-        $today = date("Y-m-d 00:00:00", strtotime("-{$weeksCount} weeks"));
         $dql  = "delete from WhiteOctoberQueueBundle:QueueEntry q where ";
         $dql .= "q.createdAt < :maxtime ";
         $dql .= "AND q.status = :status";
-        $this->em->
-            createQuery($dql)->
-            setParameter("maxtime", $today)->
-            setParameter("status", QueueEntry::COMPLETED)->
-            execute()
+        $this->em
+            ->createQuery($dql)
+            ->setParameter("maxtime", new DateTime("-{$weeksCount} weeks"))
+            ->setParameter("status", QueueEntry::COMPLETED)
+            ->execute()
         ;
     }
 }
