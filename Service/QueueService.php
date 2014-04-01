@@ -63,6 +63,6 @@ class QueueService
      */
     public function remove($type, $data= "")
     {
-        $this->em->getRepository("WhiteOctoberQueueBundle")->removeByTypeAndData();
+        $this->em->getRepository("WhiteOctoberQueueBundle:QueueEntry")->removeByTypeAndData($type, $data);
     }
 }
