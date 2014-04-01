@@ -2,7 +2,8 @@
 
 namespace WhiteOctober\QueueBundle\Command;
 
-use Symfony\Component\Console\Input\InputInterface,
+use Symfony\Component\Console\Input\InputArgument,
+    Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface;
 use WhiteOctober\QueueBundle\Entity\QueueEntry;
 
@@ -28,6 +29,7 @@ class ExpireQueueEntriesCommand extends WhiteOctoberCommandBase
         $this
             ->setName("whiteoctober:expire-queue-entries")
             ->setDescription("Expires queue entries that are more than N weeks old")
+            ->addArgument("weeks", InputArgument::OPTIONAL, "Number of weeks of messages to keep", 2)
         ;
     }
 
@@ -41,13 +43,14 @@ class ExpireQueueEntriesCommand extends WhiteOctoberCommandBase
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $weeks = $input->getArgument("weeks");
         $this->em = $this->getContainer()->get("doctrine.orm.entity_manager");
         $this->auditLogger = $this->getContainer()->get("wo_auditlogger");
 
         $output->writeln("expiring queue entries...");
-        $this->expireQueueEntriesByWeeks(2);
+        $this->expireQueueEntriesByWeeks($weeks);
         $output->writeln("done");
-        $this->auditLogger->log("queue.expired", "Cleared queue entries older than 2 weeks");
+        $this->auditLogger->log("queue.expired", "Cleared queue entries older than $weeks weeks");
     }
 
     /**
