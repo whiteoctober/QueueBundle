@@ -26,6 +26,11 @@ class ProcessQueueCommand extends WhiteOctoberCommandBase
     protected $errors = array();
 
     /**
+     * @var OutputInterface
+     */
+    protected $output;
+
+    /**
      * Command configuration
      */
     protected function configure()
@@ -47,6 +52,7 @@ class ProcessQueueCommand extends WhiteOctoberCommandBase
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->em = $this->getContainer()->get("doctrine.orm.entity_manager");
+        $this->output = $output;
 
         // Get queue entries that need processing, in order of creation date
         $limit = abs($input->getOption("limit"));
@@ -79,7 +85,7 @@ class ProcessQueueCommand extends WhiteOctoberCommandBase
 
             try {
                 $processor->setData(unserialize($entry->getData()));
-                $processor->process();
+                $processor->process($this->output);
             } catch (\Exception $e) {
                 $doNotFinish = true;
                 // Log it as not-completed
