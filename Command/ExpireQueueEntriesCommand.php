@@ -27,7 +27,7 @@ class ExpireQueueEntriesCommand extends WhiteOctoberCommandBase
     protected function configure()
     {
         $this
-            ->setName("whiteoctober:expire-queue-entries")
+            ->setName("whiteoctober:queue:expire-entries")
             ->setDescription("Expires queue entries that are more than N weeks old")
             ->addArgument("weeks", InputArgument::OPTIONAL, "Number of weeks of messages to keep", 2)
         ;

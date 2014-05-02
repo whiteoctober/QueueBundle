@@ -31,7 +31,7 @@ class ProcessQueueCommand extends WhiteOctoberCommandBase
     protected function configure()
     {
         $this->
-            setName("whiteoctober:process-queue")->
+            setName("whiteoctober:queue:process")->
             setDescription("Processes the queue")->
             addOption("limit", null, InputOption::VALUE_REQUIRED, "Limit the number of queue items to process", null)->
             addOption("entry-type", null, InputOption::VALUE_REQUIRED, "A specific queue entry type to process", null)
