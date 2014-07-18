@@ -27,7 +27,7 @@ class QueueServiceTest extends WhiteOctoberCoreTestCase
      */
     public function testCreatingJobEntry()
     {
-        /* @var $svc WhiteOctober\QueueBundle\Service\QueueService */
+        /* @var $svc \WhiteOctober\QueueBundle\Service\QueueService */
         $svc = $this->_container->get("whiteoctober.queue.service");
         $this->assertTrue($svc->create("queue.test", "some data here"));
 

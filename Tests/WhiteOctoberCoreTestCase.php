@@ -83,7 +83,7 @@ class WhiteOctoberCoreTestCase extends \PHPUnit_Framework_TestCase
     /**
      * Generates the schema to use
      *
-     * @throws Doctrine\DBAL\Schema\SchemaException
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      * @return void
      */
     protected function generateSchema()

@@ -222,7 +222,7 @@ class QueueEntry
     /**
      * Set startedAt
      *
-     * @param datetime $startedAt
+     * @param \Datetime $startedAt
      */
     public function setStartedAt($startedAt)
     {
@@ -232,7 +232,7 @@ class QueueEntry
     /**
      * Set finishedAt
      *
-     * @param datetime $finishedAt
+     * @param \Datetime $finishedAt
      */
     public function setFinishedAt($finishedAt)
     {

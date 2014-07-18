@@ -77,10 +77,10 @@ class WhiteOctoberCommandBase extends ContainerAwareCommand
      */
     protected function setupLock()
     {
-        $this->_lockDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "gbk";
+        $this->_lockDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "queue-bundle";
         $this->_lockFile = $this->_lockDir . DIRECTORY_SEPARATOR . $this->getName() . ".lck";
         if ($this->_i->getOption(self::OPTION_OVERRIDE)) {
-            $this->_o->writeln("<info>GBK: WARNING - Overriding lock!</info>");
+            $this->_o->writeln("<info>QueueBundle: WARNING - Overriding lock!</info>");
             $this->clearLockFile();
         }
     }
@@ -102,10 +102,10 @@ class WhiteOctoberCommandBase extends ContainerAwareCommand
             unlink($this->_lockFile);
         }
         if (!file_exists($this->_lockDir)) {
-            $this->_o->writeln("<info>GBK: Creating lock directory</info>");
+            $this->_o->writeln("<info>QueueBundle: Creating lock directory</info>");
             mkdir($this->_lockDir);
         }
-        $this->_o->writeln("<info>GBK: Writing lock file</info>");
+        $this->_o->writeln("<info>QueueBundle: Writing lock file</info>");
         touch($this->_lockFile);
 
         return true;
@@ -116,7 +116,7 @@ class WhiteOctoberCommandBase extends ContainerAwareCommand
      */
     protected function clearLockFile()
     {
-        $this->_o->writeln("<info>GBK: Clearing lock file</info>");
+        $this->_o->writeln("<info>QueueBundle: Clearing lock file</info>");
         @unlink($this->_lockFile);
     }
 
