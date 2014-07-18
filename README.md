@@ -25,3 +25,5 @@ Add to AppKernel:
 
         return $bundles;
     }
+
+If you're using Doctrine Migrations Bundle, you can tell Doctrine to generate migrations for the QueueBundle entity in the usual way: `app/console doctrine:migrations:diff`.
