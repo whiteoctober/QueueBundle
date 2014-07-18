@@ -62,6 +62,14 @@ class QueueEntry
     protected $data;
 
     /**
+     * Only one task with a given discriminator may be running at any one time.
+     *
+     * @ORM\Column(type="string", length=50, nullable=true)
+     * @var string
+     */
+    protected $discriminator = null;
+
+    /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
@@ -257,5 +265,24 @@ class QueueEntry
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDiscriminator()
+    {
+        return $this->discriminator;
+    }
+
+    /**
+     * @param  string     $discriminator
+     * @return QueueEntry
+     */
+    public function setDiscriminator($discriminator)
+    {
+        $this->discriminator = $discriminator;
+
+        return $this;
     }
 }

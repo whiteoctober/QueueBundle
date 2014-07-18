@@ -180,4 +180,126 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
 
         $this->assertCount(3, $entries);
     }
+
+    // Only one task with a given discriminator may be running at any one time.
+    public function testGetOutstandingEntries_sameDiscriminator()
+    {
+        $statuses = array(
+            QueueEntry::NOT_STARTED,
+            QueueEntry::IN_PROGRESS,
+        );
+
+        foreach ($statuses as $status) {
+            $entry = new QueueEntry();
+            $entry->setType('aaa');
+            $entry->setStatus($status);
+            $entry->setDiscriminator('dis');
+            $this->_entityManager->persist($entry);
+        }
+
+        $this->_entityManager->flush();
+
+        $entries = $this->repo->getOutstandingEntries();
+
+        $this->assertEmpty($entries);
+    }
+
+    public function testGetOutstandingEntries_discriminatorDiffers()
+    {
+        $statuses = array(
+            'd0' => QueueEntry::NOT_STARTED,
+            'd1' => QueueEntry::NOT_STARTED,
+            'd2' => QueueEntry::IN_PROGRESS,
+            'd3' => QueueEntry::IN_PROGRESS,
+        );
+
+        foreach ($statuses as $key => $status) {
+            $entry = new QueueEntry();
+            $entry->setType('aaa');
+            $entry->setStatus($status);
+            $entry->setDiscriminator($key);
+            $this->_entityManager->persist($entry);
+        }
+
+        $this->_entityManager->flush();
+
+        $entries = $this->repo->getOutstandingEntries();
+
+        // everything in progress has a different discriminator to the not started ones
+        $this->assertCount(2, $entries);
+
+        /** @var QueueEntry $resultEntry */
+        $resultEntry = $entries[0];
+        $this->assertSame('d0', $resultEntry->getDiscriminator());
+
+        $resultEntry = $entries[1];
+        $this->assertSame('d1', $resultEntry->getDiscriminator());
+    }
+
+    public function testGetOutstandingEntries_discriminatorLimitsResults()
+    {
+        for ($i = 1; $i <= 5; $i++) {
+            $entry = new QueueEntry();
+            $entry->setType('aaa');
+            $entry->setStatus(QueueEntry::NOT_STARTED);
+            $entry->setDiscriminator('dis');
+            $this->_entityManager->persist($entry);
+        }
+
+        // one with a different discriminator
+        $differentEntry = new QueueEntry();
+        $differentEntry->setType('aaa');
+        $differentEntry->setStatus(QueueEntry::NOT_STARTED);
+        $differentEntry->setDiscriminator('another dis');
+        $this->_entityManager->persist($differentEntry);
+
+        $this->_entityManager->flush();
+
+        $entries = $this->repo->getOutstandingEntries();
+
+        // even though there are multiple things not started, they almost all have the same discriminator
+        $this->assertCount(2, $entries);
+
+        /** @var QueueEntry $resultEntry */
+        $resultEntry = $entries[0];
+        $this->assertSame('dis', $resultEntry->getDiscriminator());
+
+        $resultEntry = $entries[1];
+        $this->assertSame('another dis', $resultEntry->getDiscriminator());
+    }
+
+    public function testGetOutstandingEntries_discriminatorWithTypeAndLimit()
+    {
+        for ($i = 1; $i <= 5; $i++) {
+            $entry = new QueueEntry();
+            $entry->setType('typey');
+            $entry->setStatus(QueueEntry::NOT_STARTED);
+            $entry->setDiscriminator('dis');
+            $this->_entityManager->persist($entry);
+        }
+
+        // one with a different discriminator but same type
+        $differentEntry1 = new QueueEntry();
+        $differentEntry1->setType('typey');
+        $differentEntry1->setStatus(QueueEntry::NOT_STARTED);
+        $differentEntry1->setDiscriminator('another dis');
+        $this->_entityManager->persist($differentEntry1);
+
+        // one with another different discriminator and different type
+        $differentEntry2 = new QueueEntry();
+        $differentEntry2->setType('typeyzzz');
+        $differentEntry2->setStatus(QueueEntry::NOT_STARTED);
+        $differentEntry2->setDiscriminator('yet another dis');
+        $this->_entityManager->persist($differentEntry2);
+
+        $this->_entityManager->flush();
+
+        // try with a limit
+        $entries = $this->repo->getOutstandingEntries(1);
+        $this->assertCount(1, $entries);
+
+        // check that the type filter still works too
+        $entries = $this->repo->getOutstandingEntries(0, 'typey');
+        $this->assertCount(2, $entries);
+    }
 }
