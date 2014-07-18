@@ -2,7 +2,7 @@
 
 namespace WhiteOctober\QueueBundle\Tests;
 
-require_once(__DIR__ . "/../../../../app/AppKernel.php");
+require_once(__DIR__ . "/../../../../../../app/AppKernel.php");
 
 use Symfony\Component\Validator\ConstraintViolationList;
 use Doctrine\ORM\Tools\SchemaTool;
