@@ -4,20 +4,21 @@ namespace WhiteOctober\QueueBundle\Tests;
 
 require_once(__DIR__ . "/../../../../../../app/AppKernel.php");
 
+use Doctrine\ORM\EntityManager;
+use Swift_Plugins_MessageLogger;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Doctrine\ORM\Tools\SchemaTool;
 
 class WhiteOctoberCoreTestCase extends \PHPUnit_Framework_TestCase
 {
+    /** @var \AppKernel */
     protected $_kernel;
 
-    protected $_application;
-
+    /** @var ContainerInterface */
     protected $_container;
 
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var EntityManager */
     protected $_entityManager;
 
     /**
@@ -168,11 +169,19 @@ class WhiteOctoberCoreTestCase extends \PHPUnit_Framework_TestCase
      * Validates a supplied object and returns
      * the violation list
      *
-     * @param $object
-     * @return\Symfony\Component\Validator\ConstraintViolationList
+     * @param  $object
+     * @return ConstraintViolationList
      */
     protected function validate($object)
     {
         return $this->_container->get("validator")->validate($object);
+    }
+
+    protected function getEmailsFromLogger()
+    {
+        /** @var Swift_Plugins_MessageLogger $logger */
+        $logger = $this->_container->get("swiftmailer.plugin.messagelogger");
+
+        return $logger->getMessages();
     }
 }
