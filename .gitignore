@@ -1,2 +1,3 @@
 # third-party code
 /vendor/
+php-cs-fixer.phar
