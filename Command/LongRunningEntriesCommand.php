@@ -6,7 +6,6 @@ use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\EntityManager;
 use WhiteOctober\QueueBundle\Entity\QueueEntry;
@@ -40,7 +39,7 @@ class LongRunningEntriesCommand extends ContainerAwareCommand
     /**
      * Main task execution method
      *
-     * @param InputInterface   $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -100,7 +99,7 @@ class LongRunningEntriesCommand extends ContainerAwareCommand
                 $entry->getId(),
                 $entry->getType(),
                 $entry->getData(),
-                $entry->getStartedAt()->format('Y-m-d')
+                $entry->getStartedAt()->format('Y-m-d H:i:s')
             );
         }
 
