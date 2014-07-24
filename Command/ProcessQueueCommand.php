@@ -58,7 +58,15 @@ class ProcessQueueCommand extends WhiteOctoberCommandBase
         $limit = abs($input->getOption("limit"));
         $entryType = $input->getOption("entry-type");
         $entries = $this->em->getRepository("WhiteOctoberQueueBundle:QueueEntry")->getOutstandingEntries($limit, $entryType);
-        $output->writeln("<info>" . count($entries) . " entries to process</info>");
+
+        $numEntries = count($entries);
+        $numEntriesMessage = "<info>Retrieved $numEntries entries to process";
+        if ($numEntries == $limit) {
+            $numEntriesMessage .= " (limit was $limit)";
+        }
+        $numEntriesMessage .= "</info>";
+        $output->writeln($numEntriesMessage);
+
         foreach ($entries as $entry) {
             $output->writeln("<comment>" . $entry->getId() . ": " . $entry->getType() . "</comment>");
             $this->processEntry($entry);
