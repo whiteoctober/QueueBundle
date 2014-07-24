@@ -69,6 +69,14 @@ Note that, by default, an invocation of the command is limited to processing one
 
     app/console whiteoctober:queue:process --limit=5 --entry-type=thistype
 
+## Checking for long-running jobs
+
+To check for long-running queue jobs, use the command `whiteoctober:queue:check-for-long-running`.  For example:
+
+    app/console whiteoctober:queue:check-for-long-running --email-to=errors@whiteoctober.co.uk --email-from=info+myapp@whiteoctober.co.uk --application-name=myproj
+
+This will send an e-mail to *errors@whiteoctober.co.uk* from *info+myapp@whiteoctober.co.uk* about any queue entries which have been in progress for more than 2 hours.  In the e-mail, the queue will be identified as being used by the application *myproj*.
+
 # Project history
 
 This project is a further development of the [QueueBundle in MyPace](https://github.com/whiteoctober/myPace/tree/develop/src/WhiteOctober/QueueBundle) (which was originally from GBK).
