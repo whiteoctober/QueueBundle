@@ -10,7 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="WhiteOctober\QueueBundle\Repository\QueueEntryRepository")
- * @ORM\Table(name="queue_entry")
+ * @ORM\Table(name="queue_entry", indexes={@ORM\Index(name="search_idx", columns={"status", "priority", "createdAt"})})
  */
 class QueueEntry
 {
