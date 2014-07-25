@@ -76,7 +76,3 @@ To check for long-running queue jobs, use the command `whiteoctober:queue:check-
     app/console whiteoctober:queue:check-for-long-running errors@whiteoctober.co.uk info+myapp@whiteoctober.co.uk 'my proj'
 
 This will send an e-mail to *errors@whiteoctober.co.uk* from *info+myapp@whiteoctober.co.uk* about any queue entries which have been in progress for more than 2 hours.  In the e-mail, the queue will be identified as being used by the application *my proj*.
-
-# Project history
-
-This project is a further development of the [QueueBundle in MyPace](https://github.com/whiteoctober/myPace/tree/develop/src/WhiteOctober/QueueBundle) (which was originally from GBK).
