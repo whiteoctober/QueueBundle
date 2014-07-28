@@ -1,6 +1,8 @@
 QueueBundle
 ===========
 
+**NB** This bundle should be considered at "early-release" stage.  Much of the code has been used in production environments, but the bundle in its current form has not been subject to such rigorous real-world usage.
+
 # Installing
 
 Install via composer:
