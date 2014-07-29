@@ -64,6 +64,7 @@ class QueueService
      */
     public function remove($type, $data = "", $status = null)
     {
+        $data = serialize($data);
         $this->em->getRepository("WhiteOctoberQueueBundle:QueueEntry")->removeBy($type, $data, $status);
     }
 }
