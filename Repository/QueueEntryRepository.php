@@ -35,28 +35,20 @@ class QueueEntryRepository extends EntityRepository
     }
 
     /**
-     * Deletes entries by type and data (and status, optionally)
+     * Deletes entries which match the provided criteria
      *
-     * @param $type
-     * @param $data
-     * @param $status Null to remove regardless of status
+     * @param array $criteria Column name => value
      */
-    public function removeBy($type, $data, $status = null)
+    public function removeBy(array $criteria)
     {
         $qry = $this
             ->createQueryBuilder("c")
             ->delete()
-            ->where("c.type = :type")
-            ->andWhere("c.data = :data")
         ;
-        $qry->setParameter("type", $type);
-        $qry->setParameter("data", $data);
 
-        if ($status) {
-            $qry
-                ->andWhere("c.status = :status")
-                ->setParameter("status", $status)
-            ;
+        foreach ($criteria as $col => $value) {
+            $qry->andWhere("c.$col = :$col");
+            $qry->setParameter($col, $value);
         }
 
         $qry->getQuery()->execute();
