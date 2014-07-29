@@ -181,7 +181,7 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
         $this->assertCount(3, $entries);
     }
 
-    protected function persistSomeQueueEntriesForTestRemoveByTypeAndData()
+    protected function persistSomeQueueEntriesForTestRemoveBy()
     {
         $statuses = array(
             QueueEntry::NOT_STARTED,
@@ -201,43 +201,43 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
         $this->_entityManager->flush();
     }
 
-    public function testRemoveByTypeAndData_noMatchType()
+    public function testRemoveBy_noMatchType()
     {
-        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
-        $this->repo->removeByTypeAndData('bbb', serialize('data'));
+        $this->persistSomeQueueEntriesForTestRemoveBy();
+        $this->repo->removeBy('bbb', serialize('data'));
 
         $entries = $this->repo->findAll();
         $this->assertCount(5, $entries);
     }
 
-    public function testRemoveByTypeAndData_noMatchData()
+    public function testRemoveBy_noMatchData()
     {
-        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
-        $this->repo->removeByTypeAndData('aaa', serialize('blah'));
+        $this->persistSomeQueueEntriesForTestRemoveBy();
+        $this->repo->removeBy('aaa', serialize('blah'));
 
         $entries = $this->repo->findAll();
         $this->assertCount(5, $entries);
     }
 
-    public function testRemoveByTypeAndData_noMatchEither()
+    public function testRemoveBy_noMatchEither()
     {
-        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
-        $this->repo->removeByTypeAndData('bbb', serialize('blah'));
+        $this->persistSomeQueueEntriesForTestRemoveBy();
+        $this->repo->removeBy('bbb', serialize('blah'));
 
         $entries = $this->repo->findAll();
         $this->assertCount(5, $entries);
     }
 
-    public function testRemoveByTypeAndData_noMatchStatus()
+    public function testRemoveBy_noMatchStatus()
     {
-        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
-        $this->repo->removeByTypeAndData('aaa', serialize('data'), QueueEntry::ERROR);
+        $this->persistSomeQueueEntriesForTestRemoveBy();
+        $this->repo->removeBy('aaa', serialize('data'), QueueEntry::ERROR);
 
         $entries = $this->repo->findAll();
         $this->assertCount(5, $entries);
     }
 
-    public function testRemoveByTypeAndData_matchOne()
+    public function testRemoveBy_matchOne()
     {
         // add entries
 
@@ -260,7 +260,7 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
 
         // call the remove function
 
-        $this->repo->removeByTypeAndData('c', serialize('data3'));
+        $this->repo->removeBy('c', serialize('data3'));
 
         // check the results
 
@@ -275,7 +275,7 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
         }
     }
 
-    public function testRemoveByTypeAndData_matchOneConsiderStatus()
+    public function testRemoveBy_matchOneConsiderStatus()
     {
         // add entries
 
@@ -308,7 +308,7 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
 
         // call the remove function
 
-        $this->repo->removeByTypeAndData('c', serialize('data3'), QueueEntry::NOT_STARTED);
+        $this->repo->removeBy('c', serialize('data3'), QueueEntry::NOT_STARTED);
 
         // check the results
 
@@ -323,16 +323,16 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
         }
     }
 
-    public function testRemoveByTypeAndData_matchAll()
+    public function testRemoveBy_matchAll()
     {
-        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
-        $this->repo->removeByTypeAndData('aaa', serialize('data'));
+        $this->persistSomeQueueEntriesForTestRemoveBy();
+        $this->repo->removeBy('aaa', serialize('data'));
 
         $entries = $this->repo->findAll();
         $this->assertEmpty($entries);
     }
 
-    public function testRemoveByTypeAndData_matchAllConsiderStatus()
+    public function testRemoveBy_matchAllConsiderStatus()
     {
         for ($i = 1; $i <= 5; $i++) {
             $entry = new QueueEntry();
@@ -343,7 +343,7 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
         }
         $this->_entityManager->flush();
 
-        $this->repo->removeByTypeAndData('aaa', serialize('bbb'), QueueEntry::NOT_STARTED);
+        $this->repo->removeBy('aaa', serialize('bbb'), QueueEntry::NOT_STARTED);
 
         $entries = $this->repo->findAll();
         $this->assertEmpty($entries);

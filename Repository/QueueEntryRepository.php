@@ -35,13 +35,13 @@ class QueueEntryRepository extends EntityRepository
     }
 
     /**
-     * Deletes entries by type and data
+     * Deletes entries by type and data (and status, optionally)
      *
      * @param $type
      * @param $data
      * @param $status Null to remove regardless of status
      */
-    public function removeByTypeAndData($type, $data, $status = null)
+    public function removeBy($type, $data, $status = null)
     {
         $qry = $this
             ->createQueryBuilder("c")

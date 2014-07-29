@@ -58,11 +58,12 @@ class QueueService
     /**
      * Removes any entries based on type and data
      *
-     * @param $type
+     * @param string $type
      * @param string $data
+     * @param int    $status optional
      */
-    public function remove($type, $data= "")
+    public function remove($type, $data = "", $status = null)
     {
-        $this->em->getRepository("WhiteOctoberQueueBundle:QueueEntry")->removeByTypeAndData($type, $data);
+        $this->em->getRepository("WhiteOctoberQueueBundle:QueueEntry")->removeBy($type, $data, $status);
     }
 }
