@@ -56,13 +56,16 @@ class QueueService
     }
 
     /**
-     * Removes any entries based on type and data
+     * Removes any entries based on criteria ('data' field is serialised if provided)
      *
-     * @param $type
-     * @param string $data
+     * @param array $criteria Column name => value
      */
-    public function remove($type, $data= "")
+    public function remove(array $criteria)
     {
-        $this->em->getRepository("WhiteOctoberQueueBundle:QueueEntry")->removeByTypeAndData($type, $data);
+        if (isset($criteria['data'])) {
+            $criteria['data'] = serialize($criteria['data']);
+        }
+
+        $this->em->getRepository("WhiteOctoberQueueBundle:QueueEntry")->removeBy($criteria);
     }
 }

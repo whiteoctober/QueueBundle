@@ -35,20 +35,22 @@ class QueueEntryRepository extends EntityRepository
     }
 
     /**
-     * Deletes entries by type and data
+     * Deletes entries which match the provided criteria
      *
-     * @param $type
-     * @param $data
+     * @param array $criteria Column name => value
      */
-    public function removeByTypeAndData($type, $data)
+    public function removeBy(array $criteria)
     {
-        $qry = $this->
-            createQueryBuilder("c")->
-            delete()->
-            where("c.type = :type")->
-            andWhere("c.data = :data");
-        $qry->setParameter("type", $type);
-        $qry->setParameter("data", $data);
+        $qry = $this
+            ->createQueryBuilder("c")
+            ->delete()
+        ;
+
+        foreach ($criteria as $col => $value) {
+            $qry->andWhere("c.$col = :$col");
+            $qry->setParameter($col, $value);
+        }
+
         $qry->getQuery()->execute();
     }
 }
