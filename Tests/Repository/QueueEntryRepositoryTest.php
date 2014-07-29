@@ -180,4 +180,172 @@ class QueueEntryRepositoryTest extends WhiteOctoberCoreTestCase
 
         $this->assertCount(3, $entries);
     }
+
+    protected function persistSomeQueueEntriesForTestRemoveByTypeAndData()
+    {
+        $statuses = array(
+            QueueEntry::NOT_STARTED,
+            QueueEntry::IN_PROGRESS,
+            QueueEntry::COMPLETED,
+            QueueEntry::NOT_STARTED,
+            QueueEntry::NOT_STARTED,
+        );
+
+        foreach ($statuses as $status) {
+            $entry = new QueueEntry();
+            $entry->setType('aaa');
+            $entry->setStatus($status);
+            $entry->setData(serialize('data'));
+            $this->_entityManager->persist($entry);
+        }
+        $this->_entityManager->flush();
+    }
+
+    public function testRemoveByTypeAndData_noMatchType()
+    {
+        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
+        $this->repo->removeByTypeAndData('bbb', serialize('data'));
+
+        $entries = $this->repo->findAll();
+        $this->assertCount(5, $entries);
+    }
+
+    public function testRemoveByTypeAndData_noMatchData()
+    {
+        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
+        $this->repo->removeByTypeAndData('aaa', serialize('blah'));
+
+        $entries = $this->repo->findAll();
+        $this->assertCount(5, $entries);
+    }
+
+    public function testRemoveByTypeAndData_noMatchEither()
+    {
+        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
+        $this->repo->removeByTypeAndData('bbb', serialize('blah'));
+
+        $entries = $this->repo->findAll();
+        $this->assertCount(5, $entries);
+    }
+
+    public function testRemoveByTypeAndData_noMatchStatus()
+    {
+        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
+        $this->repo->removeByTypeAndData('aaa', serialize('data'), QueueEntry::ERROR);
+
+        $entries = $this->repo->findAll();
+        $this->assertCount(5, $entries);
+    }
+
+    public function testRemoveByTypeAndData_matchOne()
+    {
+        // add entries
+
+        $typeAndData = array(
+            'a' => 'data1',
+            'b' => 'data2',
+            'c' => 'data3',
+            'd' => 'data4',
+            'e' => 'data5',
+        );
+
+        foreach ($typeAndData as $type => $data) {
+            $entry = new QueueEntry();
+            $entry->setType($type);
+            $entry->setStatus(QueueEntry::NOT_STARTED);
+            $entry->setData(serialize($data));
+            $this->_entityManager->persist($entry);
+        }
+        $this->_entityManager->flush();
+
+        // call the remove function
+
+        $this->repo->removeByTypeAndData('c', serialize('data3'));
+
+        // check the results
+
+        $entries = $this->repo->findAll();
+        $this->assertCount(4, $entries);
+
+        // now check that the right one was removed
+
+        /** @var QueueEntry $entry */
+        foreach ($entries as $entry) {
+            $this->assertFalse($entry->getType() == 'c' && $entry->getData() == serialize('data3'));
+        }
+    }
+
+    public function testRemoveByTypeAndData_matchOneConsiderStatus()
+    {
+        // add entries
+
+        $typeAndData = array(
+            'a' => 'data1',
+            'b' => 'data2',
+            'c' => 'data3',
+            'd' => 'data4',
+            'e' => 'data5',
+        );
+
+        $statuses = array(
+            QueueEntry::NOT_STARTED,
+            QueueEntry::IN_PROGRESS,
+            QueueEntry::NOT_STARTED,
+            QueueEntry::NOT_STARTED,
+            QueueEntry::COMPLETED,
+        );
+
+        $i = 0;
+        foreach ($typeAndData as $type => $data) {
+            $entry = new QueueEntry();
+            $entry->setType($type);
+            $entry->setStatus($statuses[$i]);
+            $entry->setData(serialize($data));
+            $this->_entityManager->persist($entry);
+            $i++;
+        }
+        $this->_entityManager->flush();
+
+        // call the remove function
+
+        $this->repo->removeByTypeAndData('c', serialize('data3'), QueueEntry::NOT_STARTED);
+
+        // check the results
+
+        $entries = $this->repo->findAll();
+        $this->assertCount(4, $entries);
+
+        // now check that the right one was removed
+
+        /** @var QueueEntry $entry */
+        foreach ($entries as $entry) {
+            $this->assertFalse($entry->getType() == 'c' && $entry->getData() == serialize('data3'));
+        }
+    }
+
+    public function testRemoveByTypeAndData_matchAll()
+    {
+        $this->persistSomeQueueEntriesForTestRemoveByTypeAndData();
+        $this->repo->removeByTypeAndData('aaa', serialize('data'));
+
+        $entries = $this->repo->findAll();
+        $this->assertEmpty($entries);
+    }
+
+    public function testRemoveByTypeAndData_matchAllConsiderStatus()
+    {
+        for ($i = 1; $i <= 5; $i++) {
+            $entry = new QueueEntry();
+            $entry->setType('aaa');
+            $entry->setStatus(QueueEntry::NOT_STARTED);
+            $entry->setData(serialize('bbb'));
+            $this->_entityManager->persist($entry);
+        }
+        $this->_entityManager->flush();
+
+        $this->repo->removeByTypeAndData('aaa', serialize('bbb'), QueueEntry::NOT_STARTED);
+
+        $entries = $this->repo->findAll();
+        $this->assertEmpty($entries);
+    }
 }

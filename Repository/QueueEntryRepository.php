@@ -39,16 +39,26 @@ class QueueEntryRepository extends EntityRepository
      *
      * @param $type
      * @param $data
+     * @param $status Null to remove regardless of status
      */
-    public function removeByTypeAndData($type, $data)
+    public function removeByTypeAndData($type, $data, $status = null)
     {
-        $qry = $this->
-            createQueryBuilder("c")->
-            delete()->
-            where("c.type = :type")->
-            andWhere("c.data = :data");
+        $qry = $this
+            ->createQueryBuilder("c")
+            ->delete()
+            ->where("c.type = :type")
+            ->andWhere("c.data = :data")
+        ;
         $qry->setParameter("type", $type);
         $qry->setParameter("data", $data);
+
+        if ($status) {
+            $qry
+                ->andWhere("c.status = :status")
+                ->setParameter("status", $status)
+            ;
+        }
+
         $qry->getQuery()->execute();
     }
 }
