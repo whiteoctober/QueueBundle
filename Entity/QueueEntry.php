@@ -6,8 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Gedmo\Mapping\Annotation as Gedmo;
-
 /**
  * @ORM\Entity(repositoryClass="WhiteOctober\QueueBundle\Repository\QueueEntryRepository")
  * @ORM\Table(name="queue_entry", indexes={@ORM\Index(name="search_idx", columns={"status", "priority", "createdAt"})})
@@ -63,7 +61,6 @@ class QueueEntry
 
     /**
      * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="create")
      */
     protected $createdAt;
 
@@ -82,6 +79,11 @@ class QueueEntry
      * @var \Datetime
      */
     protected $finishedAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
      * Get id
