@@ -5,7 +5,7 @@ QueueBundle
 
 # Installing
 
-Install via composer:
+## Install via composer
 
     // composer.json
 
@@ -20,7 +20,7 @@ Install via composer:
         "whiteoctober/queue-bundle": "version-here"
     },
 
-Add to AppKernel:
+## Add to AppKernel
 
     // app/AppKernel.php
     public function registerBundles()
@@ -33,7 +33,16 @@ Add to AppKernel:
         return $bundles;
     }
 
+## Database migration
+
 If you're using Doctrine Migrations Bundle, you can tell Doctrine to generate migrations for the QueueEntry entity in the usual way: `app/console doctrine:migrations:diff`.
+
+## (Optional) Add parameters for error emails:
+
+If you want to be emailed when queue entries fail, add the following to your `parameters.yml`:
+
+    task_errors_to: errors-sent-here-@example.com
+    emailsFromEmail: error-emails-come-from@example.com
 
 # Usage
 
