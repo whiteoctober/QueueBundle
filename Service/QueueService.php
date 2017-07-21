@@ -2,7 +2,7 @@
 
 namespace WhiteOctober\QueueBundle\Service;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;;
 
 use Doctrine\ORM\EntityManager;
 
@@ -22,9 +22,9 @@ class QueueService
      * Constructor
      *
      * @param \Doctrine\ORM\EntityManager $em
-     * @param EventDispatcher             $dispatcher
+     * @param EventDispatcherInterface    $dispatcher
      */
-    public function __construct(EntityManager $em, EventDispatcher $dispatcher)
+    public function __construct(EntityManager $em, EventDispatcherInterface $dispatcher)
     {
         $this->em = $em;
         $this->dispatcher = $dispatcher;
