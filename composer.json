@@ -4,10 +4,10 @@
 
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.3.*",
+        "symfony/symfony": "^2.3",
         "doctrine/orm": ">=2.2.3,<2.5",
         "doctrine/doctrine-bundle": "~1.2",
-        "doctrine/doctrine-fixtures-bundle": "2.2.*"
+        "doctrine/doctrine-fixtures-bundle": "^2.2"
     },
 
     "require-dev": {
