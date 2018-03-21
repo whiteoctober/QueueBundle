@@ -1,7 +1,11 @@
 QueueBundle
 ===========
 
-**NB** This bundle should be considered at "early-release" stage.  Much of the code has been used in production environments, but the bundle in its current form has not been subject to such rigorous real-world usage.
+**This project has been discontinued.**
+
+We have discontinued active development and support on this project and would encourage you to seek alternative ways to implement a queue in a Symfony project. You might want to take a look at the [leezy/pheanstalk-bundle](https://packagist.org/packages/leezy/pheanstalk-bundle)
+
+~~**NB** This bundle should be considered at "early-release" stage.~~  Much of the code has been used in production environments, but the bundle in its current form has not been subject to such rigorous real-world usage.
 
 # Installing
 
